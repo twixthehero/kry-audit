@@ -29,16 +29,20 @@ repositories {
 }
 
 compileKotlin {
-    kotlinOptions.jvmTarget = "1.8"
+    kotlinOptions.jvmTarget = '1.8'
 }
 
 compileTestKotlin {
-    kotlinOptions.jvmTarget = "1.8"
+    kotlinOptions.jvmTarget = '1.8'
 }
 
 // Only edit below this line, the above code adds and enables the necessary things for Forge to be setup.
 
-version = '0.0.1'
+def major = 0
+def minor = 0
+def patch = 1
+version = "$major.$minor.$patch"
+
 group = 'com.krythera.audit'
 archivesBaseName = 'kryaudit'
 
@@ -46,8 +50,8 @@ sourceCompatibility = '1.8'
 targetCompatibility = '1.8'
 
 flatbuffers {
-    flatcPath "${projectDir}/flatc"
-    language 'java'
+    flatcPath "${projectDir}\\flatc\\flatc.exe"
+    language 'kotlin'
 }
 
 task createFlatBuffers(type: FlatBuffers) {
@@ -160,13 +164,13 @@ dependencies {
 jar {
     manifest {
         attributes([
-                "Specification-Title"     : "kryaudit",
-                "Specification-Vendor"    : "krythera",
-                "Specification-Version"   : "1", // We are version 1 of ourselves
-                "Implementation-Title"    : project.name,
-                "Implementation-Version"  : "${project.version}",
-                "Implementation-Vendor"   : "krythera",
-                "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
+                'Specification-Title'     : 'kryaudit',
+                'Specification-Vendor'    : 'krythera',
+                'Specification-Version'   : '1', // We are version 1 of ourselves
+                'Implementation-Title'    : project.name,
+                'Implementation-Version'  : project.version,
+                'Implementation-Vendor'   : 'krythera',
+                'Implementation-Timestamp': new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
         ])
     }
 }

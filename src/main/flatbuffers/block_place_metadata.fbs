@@ -1,0 +1,3 @@
+struct BlockPlaceMetadata {
+  playerId:uint;
+}

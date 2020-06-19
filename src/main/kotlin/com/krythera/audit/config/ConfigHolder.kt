@@ -1,3 +1,5 @@
+package com.krythera.audit.config
+
 import net.minecraftforge.common.ForgeConfigSpec
 
 class ConfigHolder {
@@ -6,7 +8,11 @@ class ConfigHolder {
         var SERVER: ServerConfig
 
         init {
-            val specPair = ForgeConfigSpec.Builder().configure { ServerConfig(it) }
+            val specPair = ForgeConfigSpec.Builder().configure {
+                ServerConfig(
+                    it
+                )
+            }
             SERVER = specPair.left
             SERVER_SPEC = specPair.right
         }

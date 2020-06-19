@@ -1,4 +1,4 @@
-package cmd
+package com.krythera.audit.cmd
 
 import com.mojang.brigadier.CommandDispatcher
 import net.minecraft.command.CommandSource

@@ -1,3 +1,5 @@
+package com.krythera.audit.config
+
 import net.minecraftforge.common.ForgeConfigSpec
 
 class ServerConfig(builder: ForgeConfigSpec.Builder) {

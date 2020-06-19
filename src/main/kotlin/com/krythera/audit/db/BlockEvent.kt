@@ -1,4 +1,4 @@
-package db
+package com.krythera.audit.db
 
 import org.jetbrains.exposed.dao.Entity
 import org.jetbrains.exposed.dao.EntityClass

@@ -1,4 +1,4 @@
-package db
+package com.krythera.audit.db
 
 import net.minecraftforge.eventbus.api.Event
 import java.time.Instant

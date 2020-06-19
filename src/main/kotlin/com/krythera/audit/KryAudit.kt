@@ -1,3 +1,6 @@
+package com.krythera.audit
+
+import com.krythera.audit.config.ConfigHolder
 import net.minecraftforge.eventbus.api.SubscribeEvent
 import net.minecraftforge.fml.ModLoadingContext
 import net.minecraftforge.fml.common.Mod
@@ -9,9 +12,9 @@ import net.minecraftforge.fml.event.lifecycle.InterModEnqueueEvent
 import net.minecraftforge.fml.event.lifecycle.InterModProcessEvent
 import org.apache.logging.log4j.LogManager
 
-@Mod(KryAuditKt.MOD_ID)
-@Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD, modid = KryAuditKt.MOD_ID)
-class KryAuditKt {
+@Mod(KryAudit.MOD_ID)
+@Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD, modid = KryAudit.MOD_ID)
+class KryAudit {
     companion object {
         const val MOD_ID = "kryaudit"
 

@@ -1,4 +1,6 @@
-import cmd.KryCommand
+package com.krythera.audit
+
+import com.krythera.audit.cmd.KryCommand
 import net.minecraftforge.eventbus.api.SubscribeEvent
 import net.minecraftforge.fml.common.Mod
 import net.minecraftforge.fml.event.server.FMLServerAboutToStartEvent
@@ -8,10 +10,10 @@ import net.minecraftforge.fml.event.server.FMLServerStoppedEvent
 import net.minecraftforge.fml.event.server.FMLServerStoppingEvent
 import org.apache.logging.log4j.LogManager
 
-@Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.FORGE, modid = KryAuditKt.MOD_ID)
+@Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.FORGE, modid = KryAudit.MOD_ID)
 class ForgeEventSubscribers {
     companion object {
-        private val LOGGER = LogManager.getLogger(KryAuditKt.MOD_ID)
+        private val LOGGER = LogManager.getLogger(KryAudit.MOD_ID)
 
         // both sides' physical server events
         @SubscribeEvent

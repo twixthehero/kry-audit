@@ -1,3 +1,6 @@
+package com.krythera.audit.events
+
+import com.krythera.audit.KryAudit
 import net.minecraft.world.server.ServerMultiWorld
 import net.minecraft.world.server.ServerWorld
 import net.minecraftforge.event.world.BlockEvent
@@ -9,11 +12,11 @@ import java.util.concurrent.Executors
 
 @Mod.EventBusSubscriber(
     bus = Mod.EventBusSubscriber.Bus.FORGE,
-    modid = KryAuditKt.MOD_ID
+    modid = KryAudit.MOD_ID
 )
 class ForgeBlockEvents {
     companion object {
-        private val LOGGER = LogManager.getLogger(KryAuditKt.MOD_ID)
+        private val LOGGER = LogManager.getLogger(KryAudit.MOD_ID)
 
         private val executor = Executors.newFixedThreadPool(3)
         private val dimensionLoggers = mutableMapOf<Int, BlockEventLogger>()
@@ -39,7 +42,8 @@ class ForgeBlockEvents {
             LOGGER.debug("loading world dimension: $dimId ($dir)")
 
             dimensionLoggers.computeIfAbsent(dimId) {
-                val logger = BlockEventLogger(dimId, dir)
+                val logger =
+                    BlockEventLogger(dimId, dir)
 
                 executor.submit(logger)
 

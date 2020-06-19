@@ -1,5 +1,8 @@
-import db.Db
-import db.Evt
+package com.krythera.audit.events
+
+import com.krythera.audit.KryAudit
+import com.krythera.audit.db.Db
+import com.krythera.audit.db.Evt
 import net.minecraftforge.event.world.BlockEvent
 import net.minecraftforge.eventbus.api.Event
 import org.apache.logging.log4j.LogManager
@@ -50,6 +53,6 @@ class BlockEventLogger(private val dimensionId: Int, dimensionDir: File) : Runna
     }
 
     private companion object {
-        private val LOGGER = LogManager.getLogger(KryAuditKt.MOD_ID)
+        private val LOGGER = LogManager.getLogger(KryAudit.MOD_ID)
     }
 }

@@ -1,3 +1,4 @@
+import cmd.KryCommand
 import net.minecraftforge.eventbus.api.SubscribeEvent
 import net.minecraftforge.fml.common.Mod
 import net.minecraftforge.fml.event.server.FMLServerAboutToStartEvent
@@ -23,7 +24,8 @@ class ForgeEventSubscribers {
         @JvmStatic
         fun starting(e: FMLServerStartingEvent) {
             LOGGER.debug("server starting")
-            // TODO: Register commands
+            LOGGER.debug("registering commands")
+            KryCommand.register(e.commandDispatcher)
         }
 
         @SubscribeEvent

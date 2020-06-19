@@ -124,6 +124,7 @@ dependencies {
     def kotlinVersion = plugins.findPlugin('org.jetbrains.kotlin.jvm').kotlinPluginVersion
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:${kotlinVersion}"
 
+    compile 'com.google.flatbuffers:flatbuffers-java:1.12.0'
     compile 'com.h2database:h2:1.4.200'
     compile 'org.jetbrains.exposed:exposed-core:0.24.1'
     compile 'org.jetbrains.exposed:exposed-dao:0.24.1'

@@ -92,3 +92,4 @@ gradle-app.setting
 
 # forge runtime files
 run/
+/src/generated

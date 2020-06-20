@@ -1,0 +1,5 @@
+{
+  "argument.kryaudit.auditevent.invalid": "Invalid AuditEvent",
+  "kryaudit.noevents": "No events at %s",
+  "dimension.unloaded": "Dimension is not loaded!"
+}

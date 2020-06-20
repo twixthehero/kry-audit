@@ -21,6 +21,10 @@ class ForgeBlockEvents {
         private val executor = Executors.newFixedThreadPool(3)
         private val dimensionLoggers = mutableMapOf<Int, BlockEventLogger>()
 
+        fun getDimensionLogger(dimensionId: Int): BlockEventLogger? {
+            return dimensionLoggers[dimensionId]
+        }
+
         @SubscribeEvent
         @JvmStatic
         fun onLoadWorld(e: WorldEvent.Load) {

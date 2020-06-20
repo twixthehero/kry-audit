@@ -16,7 +16,7 @@ import java.util.concurrent.ConcurrentLinkedQueue
 class BlockEventLogger(private val dimensionId: Int, dimensionDir: File) : Runnable {
     private val queue = ConcurrentLinkedQueue<Event>()
 
-    private val db: Db = Db(dimensionDir)
+    val db = Db(dimensionDir)
     private var nextId: Byte = 1
 
     private var shouldShutdown = false

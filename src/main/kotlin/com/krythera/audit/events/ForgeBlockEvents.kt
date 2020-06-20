@@ -18,7 +18,8 @@ class ForgeBlockEvents {
     companion object {
         private val LOGGER = LogManager.getLogger(KryAudit.MOD_ID)
 
-        private val executor = Executors.newFixedThreadPool(3)
+        // one thread per loaded dimension for logging
+        private val executor = Executors.newCachedThreadPool()
         private val dimensionLoggers = mutableMapOf<Int, BlockEventLogger>()
 
         fun getDimensionLogger(dimensionId: Int): BlockEventLogger? {

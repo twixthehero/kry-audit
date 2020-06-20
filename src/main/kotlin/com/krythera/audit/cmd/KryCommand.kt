@@ -16,6 +16,7 @@ import net.minecraft.util.math.BlockPos
 import net.minecraft.util.text.ChatType
 import net.minecraft.util.text.TranslationTextComponent
 import net.minecraftforge.fml.common.registry.GameRegistry
+import net.minecraftforge.registries.IForgeRegistry
 import org.apache.logging.log4j.LogManager
 import java.nio.ByteBuffer
 import java.text.SimpleDateFormat
@@ -29,6 +30,12 @@ class KryCommand {
             SimpleCommandExceptionType(TranslationTextComponent("dimension.unloaded"))
 
         private val DATE_FORMAT = SimpleDateFormat("MM-dd HH:mm:ss")
+
+        private var _blockRegistry: IForgeRegistry<Block>? = null
+        private val blockRegistry: IForgeRegistry<Block>
+            get() {
+                return _blockRegistry ?: throw AssertionError("_blockRegistry was null during get()")
+            }
 
         @ExperimentalUnsignedTypes
         @JvmStatic
@@ -85,10 +92,12 @@ class KryCommand {
                         ChatType.CHAT
                     )
 
+                if (_blockRegistry == null) {
+                    _blockRegistry = GameRegistry.findRegistry(Block::class.java)
+                }
+
                 var num = 1
                 results.forEach {
-                    val blockRegistry = GameRegistry.findRegistry(Block::class.java)
-
                     val eventText: String
                     when (it.eventType) {
                         AuditEvent.BLOCK_PLACE -> {

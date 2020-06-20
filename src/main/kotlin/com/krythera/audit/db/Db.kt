@@ -4,6 +4,7 @@ import com.krythera.audit.events.AuditEvent
 import org.apache.logging.log4j.LogManager
 import org.jetbrains.exposed.sql.Database
 import org.jetbrains.exposed.sql.SchemaUtils
+import org.jetbrains.exposed.sql.batchInsert
 import org.jetbrains.exposed.sql.insert
 import org.jetbrains.exposed.sql.select
 import org.jetbrains.exposed.sql.selectAll
@@ -63,14 +64,12 @@ class Db(dimensionDir: File) {
     }
 
     fun addEvents(events: List<BlockEvt>) = transaction(database) {
-        events.forEach { e ->
-            TableBlockEvents.insert {
-                it[blockEventId] = e.blockEventId
-                it[timestamp] = e.timestamp
-                it[eventType] = e.eventType
-                it[blockPos] = e.blockPos
-                it[metadata] = e.metadata
-            }
+        TableBlockEvents.batchInsert(events) {
+            this[TableBlockEvents.blockEventId] = it.blockEventId
+            this[TableBlockEvents.timestamp] = it.timestamp
+            this[TableBlockEvents.eventType] = it.eventType
+            this[TableBlockEvents.blockPos] = it.blockPos
+            this[TableBlockEvents.metadata] = it.metadata
         }
 
         commit()

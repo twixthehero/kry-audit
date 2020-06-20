@@ -1,1 +1,0 @@
-for /f %%f in ('dir /b /s ..\src\main\flatbuffers') do flatc.exe --kotlin -o ..\src\generated\flatbuffers %%f

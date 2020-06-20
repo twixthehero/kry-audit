@@ -1,0 +1,7 @@
+namespace com.krythera.audit.flatbuffers;
+
+table BlockBreakMetadata {
+  playerUuid:string;
+  playerName:string;
+  blockId:string;
+}

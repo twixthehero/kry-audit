@@ -1,5 +1,7 @@
 namespace com.krythera.audit.flatbuffers;
 
-struct BlockPlaceMetadata {
-  playerId:uint;
+table BlockPlaceMetadata {
+  entityUuid:string;
+  entityName:string;
+  blockId:string;
 }

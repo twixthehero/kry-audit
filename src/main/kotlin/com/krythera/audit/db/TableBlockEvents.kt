@@ -15,6 +15,8 @@ object TableBlockEvents : IntIdTable() {
         "ENUM('${AuditEvent.AUDIT_EVENT_UNSPECIFIED}', '${AuditEvent.BLOCK_BREAK}', '${AuditEvent.BLOCK_PLACE}')",
         { AuditEvent.valueOf(it as String) },
         { it.name })
-    val blockPos = long("pos")
+    val x = integer("x")
+    val y = integer("y")
+    val z = integer("z")
     val metadata = binary("metadata", 1024 * 1024 * 10)
 }

@@ -1,5 +1,8 @@
 {
   "argument.kryaudit.auditevent.invalid": "Invalid AuditEvent",
-  "kryaudit.noevents": "No events at %s",
-  "dimension.unloaded": "Dimension is not loaded!"
+  "kryaudit.noevents.single": "No events at %s",
+  "kryaudit.noevents.multiple": "No events between %s and %s",
+  "dimension.unloaded": "Dimension is not loaded!",
+  "kryaudit.players": "Players: %s",
+  "kryaudit.event.count": "Events: %d"
 }

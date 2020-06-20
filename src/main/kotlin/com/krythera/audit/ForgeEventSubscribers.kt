@@ -22,10 +22,12 @@ class ForgeEventSubscribers {
             LOGGER.debug("server about to start")
         }
 
+        @ExperimentalUnsignedTypes
         @SubscribeEvent
         @JvmStatic
         fun starting(e: FMLServerStartingEvent) {
             LOGGER.debug("server starting")
+
             LOGGER.debug("registering commands")
             KryCommand.register(e.commandDispatcher)
         }

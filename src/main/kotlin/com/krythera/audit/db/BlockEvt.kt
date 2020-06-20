@@ -7,6 +7,8 @@ class BlockEvt(
     val blockEventId: Byte,
     val timestamp: Instant,
     val eventType: AuditEvent,
-    val blockPos: Long,
+    val x: Int,
+    val y: Int,
+    val z: Int,
     val metadata: ByteArray
 )

@@ -70,7 +70,9 @@ class BlockEventLogger(private val dimensionId: Int, dimensionDir: File) : Runna
                                 getNextId(),
                                 Instant.now(),
                                 AuditEvent.BLOCK_BREAK,
-                                e.pos.toLong(),
+                                e.pos.x,
+                                e.pos.y,
+                                e.pos.z,
                                 builder.sizedByteArray()
                             )
                         )
@@ -110,7 +112,9 @@ class BlockEventLogger(private val dimensionId: Int, dimensionDir: File) : Runna
                                 getNextId(),
                                 Instant.now(),
                                 AuditEvent.BLOCK_PLACE,
-                                e.pos.toLong(),
+                                e.pos.x,
+                                e.pos.y,
+                                e.pos.z,
                                 builder.sizedByteArray()
                             )
                         )

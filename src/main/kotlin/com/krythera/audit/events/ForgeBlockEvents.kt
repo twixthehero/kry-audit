@@ -1,8 +1,7 @@
 package com.krythera.audit.events
 
 import com.krythera.audit.KryAudit
-import net.minecraft.world.server.ServerMultiWorld
-import net.minecraft.world.server.ServerWorld
+import com.krythera.audit.db.DatabaseConnectionManager
 import net.minecraftforge.event.world.BlockEvent
 import net.minecraftforge.event.world.WorldEvent
 import net.minecraftforge.eventbus.api.SubscribeEvent
@@ -34,21 +33,11 @@ class ForgeBlockEvents {
             }
 
             val dimId = e.world.dimension.type.id
-            val world = when (e.world) {
-                is ServerMultiWorld -> {
-                    e.world as ServerMultiWorld
-                }
-                is ServerWorld -> {
-                    e.world as ServerWorld
-                }
-                else -> throw RuntimeException("invalid world type: ${e.world}")
-            }
-            val dir = e.world.dimension.type.getDirectory(world.saveHandler.worldDirectory)
-            LOGGER.debug("loading world dimension: $dimId ($dir)")
+            LOGGER.debug("loading world dimension $dimId")
 
             dimensionLoggers.computeIfAbsent(dimId) {
                 val logger =
-                    BlockEventLogger(dimId, dir)
+                    BlockEventLogger(dimId, DatabaseConnectionManager.getDatabase(dimId))
 
                 executor.submit(logger)
 
@@ -64,7 +53,7 @@ class ForgeBlockEvents {
             }
 
             val dimId = e.world.dimension.type.id
-            LOGGER.debug("unloading world dimension: $dimId")
+            LOGGER.debug("unloading world dimension $dimId")
 
             val eventLogger = dimensionLoggers.remove(dimId)
             eventLogger?.shutdown()

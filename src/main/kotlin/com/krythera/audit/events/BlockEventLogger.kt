@@ -8,14 +8,14 @@ import com.krythera.audit.flatbuffers.BlockPlaceMetadata
 import net.minecraftforge.event.world.BlockEvent
 import net.minecraftforge.eventbus.api.Event
 import org.apache.logging.log4j.LogManager
-import java.io.File
+import org.jetbrains.exposed.sql.Database
 import java.time.Instant
 import java.util.concurrent.ConcurrentLinkedQueue
 
-class BlockEventLogger(private val dimensionId: Int, dimensionDir: File) : Runnable {
+class BlockEventLogger(private val dimensionId: Int, database: Database) : Runnable {
     private val queue = ConcurrentLinkedQueue<Event>()
 
-    val db = Db(dimensionDir)
+    val db = Db(database)
     private var nextId: Byte = 1
 
     private var shouldShutdown = false

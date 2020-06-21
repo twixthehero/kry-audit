@@ -14,55 +14,7 @@ import java.io.File
 import java.nio.file.Files
 import java.nio.file.Paths
 
-class Db(dimensionDir: File) {
-    private var database: Database
-
-    init {
-        val dbFile = "${dimensionDir.toString().replace('\\', '/')}/data/kryaudit"
-
-        database = Database.connect("jdbc:h2:$dbFile", DRIVER)
-
-        transaction(database) {
-            SchemaUtils.createMissingTablesAndColumns(TableDbVersion)
-        }
-
-        // if db has been updated, need to roll to another db file
-        val currentVersion = getDbVersion()
-        if (VERSION != currentVersion) {
-            LOGGER.info("Old database version found ($currentVersion), rolling to new version file ($VERSION)")
-
-            Files.deleteIfExists(Paths.get("$dbFile.trace.db"))
-
-            val oldVersionFile = "$dbFile.mv.db.v$currentVersion"
-            Files.move(Paths.get("$dbFile.mv.db"), Paths.get(oldVersionFile))
-
-            // recreate db
-            database = Database.connect("jdbc:h2:$dbFile", DRIVER)
-
-            // set version in new db
-            transaction(database) {
-                SchemaUtils.createMissingTablesAndColumns(TableDbVersion)
-                SchemaUtils.createMissingTablesAndColumns(TableBlockEvents)
-
-                TableDbVersion.insert {
-                    it[version] = VERSION
-                }
-
-                commit()
-            }
-        }
-    }
-
-    private fun getDbVersion(): Int {
-        var version: Int? = null
-
-        transaction(database) {
-            version = TableDbVersion.selectAll().firstOrNull()?.get(TableDbVersion.version)
-        }
-
-        return version ?: 0
-    }
-
+class Db(private val database: Database) {
     fun addEvents(events: List<BlockEvt>) = transaction(database) {
         TableBlockEvents.batchInsert(events) {
             this[TableBlockEvents.blockEventId] = it.blockEventId
@@ -133,12 +85,5 @@ class Db(dimensionDir: File) {
         }
 
         return results
-    }
-
-    private companion object {
-        private const val VERSION = 2
-        private const val DRIVER = "org.h2.Driver"
-
-        private val LOGGER = LogManager.getLogger(Db::class.java)
     }
 }

@@ -42,7 +42,6 @@ Other|`./<worldName>/data/<dimensionFolder>/kryaudit.mv.db*`
 
 * Events
   * Entity pickup (P1)
-* Colored chat messages (P2)
 * Config file
   * Dimensions to store audit data for (P1)
   * Batch insert size (P1)

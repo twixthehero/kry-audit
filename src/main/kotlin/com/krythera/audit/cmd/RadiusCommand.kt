@@ -1,5 +1,6 @@
 package com.krythera.audit.cmd
 
+import com.krythera.audit.blocks.DefaultBlockAuditEvents
 import com.krythera.audit.db.AuditEvent
 import com.mojang.brigadier.arguments.IntegerArgumentType
 import com.mojang.brigadier.builder.LiteralArgumentBuilder
@@ -66,7 +67,7 @@ class RadiusCommand {
                                             position.y + y,
                                             position.z + z
                                         ),
-                                        defaultEventTypes()
+                                        DefaultBlockAuditEvents.defaultEvents()
                                     )
                                 }
                         )
@@ -112,7 +113,7 @@ class RadiusCommand {
                                     position.y + size,
                                     position.z + size
                                 ),
-                                defaultEventTypes()
+                                DefaultBlockAuditEvents.defaultEvents()
                             )
                         }
                 ).then(
@@ -150,7 +151,7 @@ class RadiusCommand {
                             position.y + DEFAULT_SIZE,
                             position.z + DEFAULT_SIZE
                         ),
-                        defaultEventTypes()
+                        DefaultBlockAuditEvents.defaultEvents()
                     )
                 }
 
@@ -162,7 +163,5 @@ class RadiusCommand {
             eventTypes: Set<AuditEvent>
         ): Int =
             BoxCommand.query(source, source.world.dimension.type.id, startPos, endPos, eventTypes)
-
-        private fun defaultEventTypes(): Set<AuditEvent> = setOf(AuditEvent.BREAK, AuditEvent.PLACE)
     }
 }

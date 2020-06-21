@@ -1,6 +1,7 @@
 package com.krythera.audit.cmd
 
 import com.krythera.audit.blocks.BlockEventData
+import com.krythera.audit.blocks.DefaultBlockAuditEvents
 import com.krythera.audit.blocks.ForgeBlockEvents
 import com.krythera.audit.db.AuditEvent
 import com.krythera.audit.flatbuffers.BlockBreakMetadata
@@ -14,6 +15,7 @@ import net.minecraft.command.arguments.BlockPosArgument
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.text.ChatType
 import net.minecraft.util.text.StringTextComponent
+import net.minecraft.util.text.TextFormatting
 import net.minecraft.util.text.TranslationTextComponent
 import org.apache.logging.log4j.LogManager
 import java.nio.ByteBuffer
@@ -62,13 +64,11 @@ class BoxCommand {
                             dimensionId,
                             startPos,
                             endPos,
-                            defaultEventTypes()
+                            DefaultBlockAuditEvents.defaultEvents()
                         )
                     }
                 )
             )
-
-        private fun defaultEventTypes(): Set<AuditEvent> = setOf(AuditEvent.BREAK, AuditEvent.PLACE)
 
         @ExperimentalUnsignedTypes
         fun query(
@@ -89,14 +89,14 @@ class BoxCommand {
                 player.sendMessage(
                     TranslationTextComponent(
                         "kryaudit.noevents.multiple",
-                        startPos,
-                        endPos
+                        StringTextComponent("$startPos").applyTextStyle(TextFormatting.GREEN),
+                        StringTextComponent("$startPos").applyTextStyle(TextFormatting.RED)
                     ),
                     ChatType.CHAT
                 )
             } else {
                 player.sendMessage(
-                    StringTextComponent("(${startPos.x}, ${startPos.y}, ${startPos.z}) <=> (${endPos.x}, ${endPos.y}, ${endPos.z})"),
+                    StringTextComponent("${TextFormatting.GREEN}(${startPos.x}, ${startPos.y}, ${startPos.z})${TextFormatting.RESET} <=> ${TextFormatting.RED}(${endPos.x}, ${endPos.y}, ${endPos.z})"),
                     ChatType.CHAT
                 )
 
@@ -143,7 +143,7 @@ class BoxCommand {
                 )
 
                 events.keys.filter { events[it]?.isNotEmpty() ?: false }.forEach {
-                    player.sendMessage(StringTextComponent("$it -> ${events[it]?.size}"))
+                    player.sendMessage(StringTextComponent("${TextFormatting.RED}$it${TextFormatting.RESET} -> ${events[it]?.size}"))
                 }
 
                 player.sendMessage(

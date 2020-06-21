@@ -1,5 +1,6 @@
 package com.krythera.audit.cmd
 
+import com.krythera.audit.blocks.DefaultBlockAuditEvents
 import com.krythera.audit.blocks.ForgeBlockEvents
 import com.krythera.audit.db.AuditEvent
 import com.krythera.audit.flatbuffers.BlockBreakMetadata
@@ -17,6 +18,7 @@ import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Vec3d
 import net.minecraft.util.text.ChatType
 import net.minecraft.util.text.StringTextComponent
+import net.minecraft.util.text.TextFormatting
 import net.minecraft.util.text.TranslationTextComponent
 import net.minecraftforge.fml.common.registry.GameRegistry
 import net.minecraftforge.registries.IForgeRegistry
@@ -59,7 +61,7 @@ class SingleCommand {
                             it.source,
                             it.source.world.dimension.type.id,
                             it.source.asPlayer().position,
-                            defaultEventTypes()
+                            DefaultBlockAuditEvents.defaultEvents()
                         )
                     }
             ).then(
@@ -81,11 +83,9 @@ class SingleCommand {
                     it.source,
                     it.source.world.dimension.type.id,
                     it.source.asPlayer().position,
-                    defaultEventTypes()
+                    DefaultBlockAuditEvents.defaultEvents()
                 )
             }
-
-        private fun defaultEventTypes(): Set<AuditEvent> = setOf(AuditEvent.BREAK, AuditEvent.PLACE)
 
         @ExperimentalUnsignedTypes
         private fun query(
@@ -103,12 +103,17 @@ class SingleCommand {
             if (results.isEmpty()) {
                 source.asPlayer()
                     .sendMessage(
-                        TranslationTextComponent("kryaudit.noevents.single", position),
+                        TranslationTextComponent(
+                            "kryaudit.noevents.single",
+                            StringTextComponent("$position").applyTextStyle(TextFormatting.GREEN)
+                        ),
                         ChatType.CHAT
                     )
             } else {
                 player.sendMessage(
-                    TranslationTextComponent("(${position.x}, ${position.y}, ${position.z})"),
+                    TranslationTextComponent("(${position.x}, ${position.y}, ${position.z})").applyTextStyle(
+                        TextFormatting.GREEN
+                    ),
                     ChatType.CHAT
                 )
 
@@ -177,14 +182,31 @@ class SingleCommand {
                 sendMessage(
                     TranslationTextComponent(
                         "kryaudit.command.kry.audit.query.single.args",
+                        StringTextComponent("position").applyTextStyle(TextFormatting.BLUE),
                         source.pos.toBlockPos().let {
                             "(${position.x}, ${position.y}, ${position.z})"
-                        }
+                        },
+                        StringTextComponent("eventTypes").applyTextStyle(TextFormatting.YELLOW)
                     )
                 )
                 sendMessage(StringTextComponent(""))
-                sendMessage(TranslationTextComponent("kryaudit.command.kry.audit.query.single.args.position"))
-                sendMessage(TranslationTextComponent("kryaudit.command.kry.audit.eventtypes"))
+                sendMessage(
+                    TranslationTextComponent(
+                        "kryaudit.command.kry.audit.query.single.args.position",
+                        TranslationTextComponent("kryaudit.command.position").applyTextStyle(
+                            TextFormatting.BLUE
+                        )
+                    )
+                )
+                sendMessage(
+                    TranslationTextComponent(
+                        "kryaudit.command.kry.audit.query.eventtypes",
+                        StringTextComponent("eventTypes").applyTextStyle(TextFormatting.YELLOW),
+                        StringTextComponent(
+                            DefaultBlockAuditEvents.defaultEvents().joinToString(", ")
+                        )
+                    )
+                )
                 sendMessage(StringTextComponent(""))
                 sendMessage(TranslationTextComponent("kryaudit.command.kry.help"))
             }

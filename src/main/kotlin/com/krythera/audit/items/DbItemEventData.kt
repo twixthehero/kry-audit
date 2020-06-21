@@ -2,9 +2,9 @@ package com.krythera.audit.items
 
 import com.krythera.audit.db.AuditEvent
 import com.krythera.audit.db.TableItemEvents
-import net.minecraft.util.math.BlockPos
 import org.apache.logging.log4j.LogManager
 import org.jetbrains.exposed.sql.Database
+import org.jetbrains.exposed.sql.and
 import org.jetbrains.exposed.sql.batchInsert
 import org.jetbrains.exposed.sql.select
 import org.jetbrains.exposed.sql.transactions.transaction
@@ -43,13 +43,13 @@ class DbItemEventData(private val database: Database) {
 
         transaction(database) {
             TableItemEvents.select {
-                TableItemEvents.x greaterEq startX
-                TableItemEvents.y greaterEq startY
-                TableItemEvents.z greaterEq startZ
-                TableItemEvents.x lessEq endX
-                TableItemEvents.y lessEq endY
-                TableItemEvents.z lessEq endZ
-                TableItemEvents.eventType inList eventTypes
+                (TableItemEvents.x greaterEq startX) and
+                        (TableItemEvents.y greaterEq startY) and
+                        (TableItemEvents.z greaterEq startZ) and
+                        (TableItemEvents.x lessEq endX) and
+                        (TableItemEvents.y lessEq endY) and
+                        (TableItemEvents.z lessEq endZ) and
+                        (TableItemEvents.eventType inList eventTypes)
             }.forEach {
                 results.add(
                     ItemEventData(

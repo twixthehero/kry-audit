@@ -5,6 +5,7 @@ import com.krythera.audit.db.TableBlockEvents
 import net.minecraft.util.math.BlockPos
 import org.apache.logging.log4j.LogManager
 import org.jetbrains.exposed.sql.Database
+import org.jetbrains.exposed.sql.and
 import org.jetbrains.exposed.sql.batchInsert
 import org.jetbrains.exposed.sql.select
 import org.jetbrains.exposed.sql.transactions.transaction
@@ -32,12 +33,11 @@ class DbBlockEventData(private val database: Database) {
         val results = mutableListOf<BlockEventData>()
 
         transaction(database) {
-
             TableBlockEvents.select {
-                TableBlockEvents.x eq position.x
-                TableBlockEvents.y eq position.y
-                TableBlockEvents.z eq position.z
-                TableBlockEvents.eventType inList eventTypes
+                (TableBlockEvents.x eq position.x) and
+                        (TableBlockEvents.y eq position.y) and
+                        (TableBlockEvents.z eq position.z) and
+                        (TableBlockEvents.eventType inList eventTypes)
             }.forEach {
                 results.add(
                     BlockEventData(
@@ -65,13 +65,13 @@ class DbBlockEventData(private val database: Database) {
 
         transaction(database) {
             TableBlockEvents.select {
-                TableBlockEvents.x greaterEq startPos.x
-                TableBlockEvents.y greaterEq startPos.y
-                TableBlockEvents.z greaterEq startPos.z
-                TableBlockEvents.x lessEq endPos.x
-                TableBlockEvents.y lessEq endPos.y
-                TableBlockEvents.z lessEq endPos.z
-                TableBlockEvents.eventType inList eventTypes
+                (TableBlockEvents.x greaterEq startPos.x) and
+                        (TableBlockEvents.y greaterEq startPos.y) and
+                        (TableBlockEvents.z greaterEq startPos.z) and
+                        (TableBlockEvents.x lessEq endPos.x) and
+                        (TableBlockEvents.y lessEq endPos.y) and
+                        (TableBlockEvents.z lessEq endPos.z) and
+                        (TableBlockEvents.eventType inList eventTypes)
             }.forEach {
                 results.add(
                     BlockEventData(

@@ -1,22 +1,16 @@
-package com.krythera.audit.db
+package com.krythera.audit.blocks
 
+import com.krythera.audit.db.TableBlockEvents
 import com.krythera.audit.events.AuditEvent
 import net.minecraft.util.math.BlockPos
-import org.apache.logging.log4j.LogManager
 import org.jetbrains.exposed.sql.Database
-import org.jetbrains.exposed.sql.SchemaUtils
 import org.jetbrains.exposed.sql.batchInsert
-import org.jetbrains.exposed.sql.insert
 import org.jetbrains.exposed.sql.select
-import org.jetbrains.exposed.sql.selectAll
 import org.jetbrains.exposed.sql.transactions.transaction
-import java.io.File
-import java.nio.file.Files
-import java.nio.file.Paths
 
-class Db(private val database: Database) {
-    fun addEvents(events: List<BlockEvt>) = transaction(database) {
-        TableBlockEvents.batchInsert(events) {
+class DbBlockEventData(private val database: Database) {
+    fun addEvents(eventData: List<BlockEventData>) = transaction(database) {
+        TableBlockEvents.batchInsert(eventData) {
             this[TableBlockEvents.blockEventId] = it.blockEventId
             this[TableBlockEvents.timestamp] = it.timestamp
             this[TableBlockEvents.eventType] = it.eventType
@@ -29,8 +23,8 @@ class Db(private val database: Database) {
         commit()
     }
 
-    fun query(position: BlockPos, eventTypes: Set<AuditEvent>): List<BlockEvt> {
-        val results = mutableListOf<BlockEvt>()
+    fun query(position: BlockPos, eventTypes: Set<AuditEvent>): List<BlockEventData> {
+        val results = mutableListOf<BlockEventData>()
 
         transaction(database) {
 
@@ -41,7 +35,7 @@ class Db(private val database: Database) {
                 TableBlockEvents.eventType inList eventTypes
             }.forEach {
                 results.add(
-                    BlockEvt(
+                    BlockEventData(
                         it[TableBlockEvents.blockEventId],
                         it[TableBlockEvents.timestamp],
                         it[TableBlockEvents.eventType],
@@ -57,8 +51,12 @@ class Db(private val database: Database) {
         return results
     }
 
-    fun query(startPos: BlockPos, endPos: BlockPos, eventTypes: Set<AuditEvent>): List<BlockEvt> {
-        val results = mutableListOf<BlockEvt>()
+    fun query(
+        startPos: BlockPos,
+        endPos: BlockPos,
+        eventTypes: Set<AuditEvent>
+    ): List<BlockEventData> {
+        val results = mutableListOf<BlockEventData>()
 
         transaction(database) {
             TableBlockEvents.select {
@@ -71,7 +69,7 @@ class Db(private val database: Database) {
                 TableBlockEvents.eventType inList eventTypes
             }.forEach {
                 results.add(
-                    BlockEvt(
+                    BlockEventData(
                         it[TableBlockEvents.blockEventId],
                         it[TableBlockEvents.timestamp],
                         it[TableBlockEvents.eventType],

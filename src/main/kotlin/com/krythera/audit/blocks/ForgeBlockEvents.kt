@@ -1,4 +1,4 @@
-package com.krythera.audit.events
+package com.krythera.audit.blocks
 
 import com.krythera.audit.KryAudit
 import com.krythera.audit.db.DatabaseConnectionManager

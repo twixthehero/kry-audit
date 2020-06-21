@@ -1,8 +1,8 @@
 package com.krythera.audit.cmd
 
-import com.krythera.audit.db.BlockEvt
+import com.krythera.audit.blocks.BlockEventData
+import com.krythera.audit.blocks.ForgeBlockEvents
 import com.krythera.audit.events.AuditEvent
-import com.krythera.audit.events.ForgeBlockEvents
 import com.krythera.audit.flatbuffers.BlockBreakMetadata
 import com.krythera.audit.flatbuffers.BlockPlaceMetadata
 import com.mojang.brigadier.Command
@@ -212,7 +212,7 @@ class QueryCommand {
                             ChatType.CHAT
                         )
 
-                        val events = mutableMapOf<AuditEvent, MutableList<BlockEvt>>()
+                        val events = mutableMapOf<AuditEvent, MutableList<BlockEventData>>()
                         val playerCount = mutableMapOf<String?, Int>()
                         var numEvents = 0
                         AuditEvent.values().filterNot { it == AuditEvent.AUDIT_EVENT_UNSPECIFIED }

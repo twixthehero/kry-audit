@@ -1,8 +1,7 @@
-package com.krythera.audit.events
+package com.krythera.audit.blocks
 
 import com.google.flatbuffers.FlatBufferBuilder
-import com.krythera.audit.db.BlockEvt
-import com.krythera.audit.db.Db
+import com.krythera.audit.events.AuditEvent
 import com.krythera.audit.flatbuffers.BlockBreakMetadata
 import com.krythera.audit.flatbuffers.BlockPlaceMetadata
 import net.minecraftforge.event.world.BlockEvent
@@ -15,7 +14,7 @@ import java.util.concurrent.ConcurrentLinkedQueue
 class BlockEventLogger(private val dimensionId: Int, database: Database) : Runnable {
     private val queue = ConcurrentLinkedQueue<Event>()
 
-    val db = Db(database)
+    val db = DbBlockEventData(database)
     private var nextId: Byte = 1
 
     private var shouldShutdown = false
@@ -34,7 +33,7 @@ class BlockEventLogger(private val dimensionId: Int, database: Database) : Runna
         LOGGER.debug("[dim $dimensionId] logger started")
 
         while (!shouldShutdown) {
-            val events = mutableListOf<BlockEvt>()
+            val events = mutableListOf<BlockEventData>()
             for (i in 0 until queue.size.coerceAtMost(15)) {
                 val e = queue.poll() ?: break
                 LOGGER.debug("[dim $dimensionId] adding event: $e")
@@ -65,7 +64,7 @@ class BlockEventLogger(private val dimensionId: Int, database: Database) : Runna
                         )
 
                         events.add(
-                            BlockEvt(
+                            BlockEventData(
                                 getNextId(),
                                 Instant.now(),
                                 AuditEvent.BLOCK_BREAK,
@@ -107,7 +106,7 @@ class BlockEventLogger(private val dimensionId: Int, database: Database) : Runna
 //                        }
 
                         events.add(
-                            BlockEvt(
+                            BlockEventData(
                                 getNextId(),
                                 Instant.now(),
                                 AuditEvent.BLOCK_PLACE,

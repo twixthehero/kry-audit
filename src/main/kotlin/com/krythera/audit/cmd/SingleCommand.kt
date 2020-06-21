@@ -5,6 +5,7 @@ import com.krythera.audit.db.AuditEvent
 import com.krythera.audit.flatbuffers.BlockBreakMetadata
 import com.krythera.audit.flatbuffers.BlockPlaceMetadata
 import com.mojang.brigadier.Command
+import com.mojang.brigadier.arguments.StringArgumentType
 import com.mojang.brigadier.builder.LiteralArgumentBuilder
 import com.mojang.brigadier.exceptions.SimpleCommandExceptionType
 import net.minecraft.block.Block
@@ -13,6 +14,7 @@ import net.minecraft.command.Commands
 import net.minecraft.command.arguments.BlockPosArgument
 import net.minecraft.util.ResourceLocation
 import net.minecraft.util.math.BlockPos
+import net.minecraft.util.math.Vec3d
 import net.minecraft.util.text.ChatType
 import net.minecraft.util.text.StringTextComponent
 import net.minecraft.util.text.TranslationTextComponent
@@ -43,21 +45,47 @@ class SingleCommand {
         fun register(): LiteralArgumentBuilder<CommandSource> =
             Commands.literal("single").then(
                 Commands.argument("position", BlockPosArgument.blockPos())
-                    .then(
-                        Commands.argument(
-                            "eventTypes",
-                            AuditEventsArgument.auditEvents()
+                    .then(Commands.argument("eventTypes", AuditEventsArgument.auditEvents())
+                        .executes {
+                            query(
+                                it.source,
+                                it.source.world.dimension.type.id,
+                                BlockPosArgument.getBlockPos(it, "position"),
+                                AuditEventsArgument.getAuditEvents(it, "eventTypes")
+                            )
+                        }
+                    ).executes {
+                        query(
+                            it.source,
+                            it.source.world.dimension.type.id,
+                            it.source.asPlayer().position,
+                            defaultEventTypes()
                         )
-                            .executes {
-                                val dimensionId = it.source.world.dimension.type.id
-                                val position =
-                                    BlockPosArgument.getBlockPos(it, "position")
-                                val types =
-                                    AuditEventsArgument.getAuditEvents(it, "eventTypes")
+                    }
+            ).then(
+                Commands.argument("help", StringArgumentType.word()).executes {
+                    showHelp(it.source)
+                }
+            ).then(
+                Commands.argument("eventTypes", AuditEventsArgument.auditEvents())
+                    .executes {
+                        query(
+                            it.source,
+                            it.source.world.dimension.type.id,
+                            it.source.asPlayer().position,
+                            AuditEventsArgument.getAuditEvents(it, "eventTypes")
+                        )
+                    }
+            ).executes {
+                query(
+                    it.source,
+                    it.source.world.dimension.type.id,
+                    it.source.asPlayer().position,
+                    defaultEventTypes()
+                )
+            }
 
-                                query(it.source, dimensionId, position, types)
-                            })
-            )
+        private fun defaultEventTypes(): Set<AuditEvent> = setOf(AuditEvent.BREAK, AuditEvent.PLACE)
 
         @ExperimentalUnsignedTypes
         private fun query(
@@ -141,5 +169,29 @@ class SingleCommand {
 
             return Command.SINGLE_SUCCESS
         }
+
+        private fun showHelp(source: CommandSource): Int {
+            source.asPlayer().apply {
+                sendMessage(TranslationTextComponent("kryaudit.command.kry.audit.query.single.title"))
+                sendMessage(StringTextComponent(""))
+                sendMessage(
+                    TranslationTextComponent(
+                        "kryaudit.command.kry.audit.query.single.args",
+                        source.pos.toBlockPos().let {
+                            "(${position.x}, ${position.y}, ${position.z})"
+                        }
+                    )
+                )
+                sendMessage(StringTextComponent(""))
+                sendMessage(TranslationTextComponent("kryaudit.command.kry.audit.query.single.args.position"))
+                sendMessage(TranslationTextComponent("kryaudit.command.kry.audit.eventtypes"))
+                sendMessage(StringTextComponent(""))
+                sendMessage(TranslationTextComponent("kryaudit.command.kry.help"))
+            }
+
+            return Command.SINGLE_SUCCESS
+        }
     }
 }
+
+private fun Vec3d.toBlockPos() = BlockPos(x, y, z)

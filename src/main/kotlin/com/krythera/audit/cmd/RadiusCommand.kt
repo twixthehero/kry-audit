@@ -11,7 +11,7 @@ import kotlin.math.abs
 class RadiusCommand {
     companion object {
         // TODO: replace with config value
-        private const val DEFAULT_SIZE = 10
+        const val DEFAULT_SIZE = 10
 
         @ExperimentalUnsignedTypes
         fun register(): LiteralArgumentBuilder<CommandSource> =
@@ -20,33 +20,34 @@ class RadiusCommand {
                     Commands.argument("x", IntegerArgumentType.integer(1)).then(
                         Commands.argument("y", IntegerArgumentType.integer(1)).then(
                             Commands.argument("z", IntegerArgumentType.integer(1))
-                                .then(Commands.argument(
-                                    "eventTypes",
-                                    AuditEventsArgument.auditEvents()
-                                )
-                                    .executes {
-                                        val x = abs(IntegerArgumentType.getInteger(it, "x"))
-                                        val y = abs(IntegerArgumentType.getInteger(it, "y"))
-                                        val z = abs(IntegerArgumentType.getInteger(it, "z"))
-                                        val eventTypes =
-                                            AuditEventsArgument.getAuditEvents(it, "eventTypes")
-                                        val position = it.source.pos
+                                .then(
+                                    Commands.argument(
+                                        "eventTypes",
+                                        AuditEventsArgument.auditEvents()
+                                    )
+                                        .executes {
+                                            val x = abs(IntegerArgumentType.getInteger(it, "x"))
+                                            val y = abs(IntegerArgumentType.getInteger(it, "y"))
+                                            val z = abs(IntegerArgumentType.getInteger(it, "z"))
+                                            val eventTypes =
+                                                AuditEventsArgument.getAuditEvents(it, "eventTypes")
+                                            val position = it.source.pos
 
-                                        query(
-                                            it.source,
-                                            BlockPos(
-                                                position.x - x,
-                                                position.y - y,
-                                                position.z - z
-                                            ),
-                                            BlockPos(
-                                                position.x + x,
-                                                position.y + y,
-                                                position.z + z
-                                            ),
-                                            eventTypes
-                                        )
-                                    }
+                                            query(
+                                                it.source,
+                                                BlockPos(
+                                                    position.x - x,
+                                                    position.y - y,
+                                                    position.z - z
+                                                ),
+                                                BlockPos(
+                                                    position.x + x,
+                                                    position.y + y,
+                                                    position.z + z
+                                                ),
+                                                eventTypes
+                                            )
+                                        }
                                 ).executes {
                                     val x = abs(IntegerArgumentType.getInteger(it, "x"))
                                     val y = abs(IntegerArgumentType.getInteger(it, "y"))

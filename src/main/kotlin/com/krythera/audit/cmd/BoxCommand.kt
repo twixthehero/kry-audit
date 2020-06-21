@@ -26,8 +26,8 @@ class BoxCommand {
 
         @ExperimentalUnsignedTypes
         fun register(): LiteralArgumentBuilder<CommandSource> =
-            Commands.literal("box").then(Commands.argument("startPos", BlockPosArgument.blockPos())
-                .then(
+            Commands.literal("box").then(
+                Commands.argument("startPos", BlockPosArgument.blockPos()).then(
                     Commands.argument("endPos", BlockPosArgument.blockPos()).then(
                         Commands.argument(
                             "eventTypes",
@@ -50,7 +50,25 @@ class BoxCommand {
                                     types
                                 )
                             }
-                    )))
+                    ).executes {
+                        val dimensionId = it.source.world.dimension.type.id
+                        val startPos =
+                            BlockPosArgument.getBlockPos(it, "startPos")
+                        val endPos =
+                            BlockPosArgument.getBlockPos(it, "endPos")
+
+                        query(
+                            it.source,
+                            dimensionId,
+                            startPos,
+                            endPos,
+                            defaultEventTypes()
+                        )
+                    }
+                )
+            )
+
+        private fun defaultEventTypes(): Set<AuditEvent> = setOf(AuditEvent.BREAK, AuditEvent.PLACE)
 
 
         @ExperimentalUnsignedTypes

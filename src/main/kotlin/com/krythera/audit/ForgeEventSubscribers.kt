@@ -13,7 +13,7 @@ import org.apache.logging.log4j.LogManager
 @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.FORGE, modid = KryAudit.MOD_ID)
 class ForgeEventSubscribers {
     companion object {
-        private val LOGGER = LogManager.getLogger(KryAudit.MOD_ID)
+        private val LOGGER = LogManager.getLogger(ForgeEventSubscribers::class.java)
 
         // both sides' physical server events
         @SubscribeEvent

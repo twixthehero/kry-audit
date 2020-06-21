@@ -139,6 +139,6 @@ class Db(dimensionDir: File) {
         private const val VERSION = 2
         private const val DRIVER = "org.h2.Driver"
 
-        private val LOGGER = LogManager.getLogger(Db::class.java.name)
+        private val LOGGER = LogManager.getLogger(Db::class.java)
     }
 }

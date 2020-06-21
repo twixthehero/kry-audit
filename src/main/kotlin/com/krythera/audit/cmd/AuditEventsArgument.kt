@@ -1,5 +1,6 @@
 package com.krythera.audit.cmd
 
+import com.google.gson.JsonObject
 import com.krythera.audit.events.AuditEvent
 import com.mojang.brigadier.StringReader
 import com.mojang.brigadier.arguments.ArgumentType
@@ -9,9 +10,12 @@ import com.mojang.brigadier.suggestion.Suggestions
 import com.mojang.brigadier.suggestion.SuggestionsBuilder
 import net.minecraft.command.CommandSource
 import net.minecraft.command.ISuggestionProvider
+import net.minecraft.command.arguments.IArgumentSerializer
+import net.minecraft.network.PacketBuffer
 import net.minecraft.util.text.TranslationTextComponent
 import java.util.concurrent.CompletableFuture
 
+/** [AuditEvent] list command argument. */
 class AuditEventsArgument : ArgumentType<Set<AuditEvent>> {
     override fun parse(reader: StringReader): Set<AuditEvent> {
         if (!reader.canRead()) {
@@ -55,6 +59,16 @@ class AuditEventsArgument : ArgumentType<Set<AuditEvent>> {
 
         fun getAuditEvents(ctx: CommandContext<CommandSource>, name: String): Set<AuditEvent> {
             return ctx.getArgument(name, Set::class.java) as Set<AuditEvent>
+        }
+
+        class Serializer : IArgumentSerializer<AuditEventsArgument> {
+            override fun write(argument: AuditEventsArgument, buffer: PacketBuffer) {
+            }
+
+            override fun write(argument: AuditEventsArgument, json: JsonObject) {
+            }
+
+            override fun read(buffer: PacketBuffer) = auditEvents()
         }
     }
 }

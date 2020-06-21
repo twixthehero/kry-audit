@@ -16,7 +16,7 @@ import java.util.concurrent.Executors
 )
 class ForgeBlockEvents {
     companion object {
-        private val LOGGER = LogManager.getLogger(KryAudit.MOD_ID)
+        private val LOGGER = LogManager.getLogger(ForgeBlockEvents::class.java)
 
         // one thread per loaded dimension for logging
         private val executor = Executors.newCachedThreadPool()

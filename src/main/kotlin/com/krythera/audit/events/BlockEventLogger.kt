@@ -1,7 +1,6 @@
 package com.krythera.audit.events
 
 import com.google.flatbuffers.FlatBufferBuilder
-import com.krythera.audit.KryAudit
 import com.krythera.audit.db.BlockEvt
 import com.krythera.audit.db.Db
 import com.krythera.audit.flatbuffers.BlockBreakMetadata
@@ -141,6 +140,6 @@ class BlockEventLogger(private val dimensionId: Int, dimensionDir: File) : Runna
     }
 
     private companion object {
-        private val LOGGER = LogManager.getLogger(KryAudit.MOD_ID)
+        private val LOGGER = LogManager.getLogger(BlockEventLogger::class.java)
     }
 }

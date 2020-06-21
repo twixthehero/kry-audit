@@ -6,6 +6,7 @@ import net.minecraft.command.Commands
 
 class AuditCommand {
     companion object {
+        @ExperimentalUnsignedTypes
         fun register(): LiteralArgumentBuilder<CommandSource> {
             return Commands.literal("audit")
                 .requires { it.hasPermissionLevel(3) }

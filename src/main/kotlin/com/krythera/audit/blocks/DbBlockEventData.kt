@@ -1,7 +1,7 @@
 package com.krythera.audit.blocks
 
+import com.krythera.audit.db.AuditEvent
 import com.krythera.audit.db.TableBlockEvents
-import com.krythera.audit.events.AuditEvent
 import net.minecraft.util.math.BlockPos
 import org.jetbrains.exposed.sql.Database
 import org.jetbrains.exposed.sql.batchInsert

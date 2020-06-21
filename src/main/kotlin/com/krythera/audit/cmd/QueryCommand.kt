@@ -2,7 +2,7 @@ package com.krythera.audit.cmd
 
 import com.krythera.audit.blocks.BlockEventData
 import com.krythera.audit.blocks.ForgeBlockEvents
-import com.krythera.audit.events.AuditEvent
+import com.krythera.audit.db.AuditEvent
 import com.krythera.audit.flatbuffers.BlockBreakMetadata
 import com.krythera.audit.flatbuffers.BlockPlaceMetadata
 import com.mojang.brigadier.Command
@@ -99,7 +99,7 @@ class QueryCommand {
                         results.forEach {
                             val eventText: String
                             when (it.eventType) {
-                                AuditEvent.BLOCK_PLACE -> {
+                                AuditEvent.PLACE -> {
                                     val breakMetadata =
                                         BlockBreakMetadata.getRootAsBlockBreakMetadata(
                                             ByteBuffer.wrap(it.metadata)
@@ -116,7 +116,7 @@ class QueryCommand {
                                     eventText =
                                         "${DATE_FORMAT.format(Date.from(it.timestamp))} ${breakMetadata.playerName} placed ${block?.nameTextComponent?.unformattedComponentText}"
                                 }
-                                AuditEvent.BLOCK_BREAK -> {
+                                AuditEvent.BREAK -> {
                                     val placeMetadata =
                                         BlockPlaceMetadata.getRootAsBlockPlaceMetadata(
                                             ByteBuffer.wrap(it.metadata)
@@ -223,7 +223,7 @@ class QueryCommand {
                                     list.add(it)
 
                                     when (it.eventType) {
-                                        AuditEvent.BLOCK_BREAK -> {
+                                        AuditEvent.BREAK -> {
                                             val breakMetadata =
                                                 BlockBreakMetadata.getRootAsBlockBreakMetadata(
                                                     ByteBuffer.wrap(it.metadata)
@@ -232,7 +232,7 @@ class QueryCommand {
                                             playerCount[breakMetadata.playerName] =
                                                 playerCount.getOrPut(breakMetadata.playerName) { 0 } + 1
                                         }
-                                        AuditEvent.BLOCK_PLACE -> {
+                                        AuditEvent.PLACE -> {
                                             val placeMetadata =
                                                 BlockPlaceMetadata.getRootAsBlockPlaceMetadata(
                                                     ByteBuffer.wrap(it.metadata)

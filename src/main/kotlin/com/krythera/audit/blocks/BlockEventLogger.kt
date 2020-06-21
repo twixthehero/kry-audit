@@ -1,7 +1,7 @@
 package com.krythera.audit.blocks
 
 import com.google.flatbuffers.FlatBufferBuilder
-import com.krythera.audit.events.AuditEvent
+import com.krythera.audit.db.AuditEvent
 import com.krythera.audit.flatbuffers.BlockBreakMetadata
 import com.krythera.audit.flatbuffers.BlockPlaceMetadata
 import net.minecraftforge.event.world.BlockEvent
@@ -67,7 +67,7 @@ class BlockEventLogger(private val dimensionId: Int, database: Database) : Runna
                             BlockEventData(
                                 getNextId(),
                                 Instant.now(),
-                                AuditEvent.BLOCK_BREAK,
+                                AuditEvent.BREAK,
                                 e.pos.x,
                                 e.pos.y,
                                 e.pos.z,
@@ -109,7 +109,7 @@ class BlockEventLogger(private val dimensionId: Int, database: Database) : Runna
                             BlockEventData(
                                 getNextId(),
                                 Instant.now(),
-                                AuditEvent.BLOCK_PLACE,
+                                AuditEvent.PLACE,
                                 e.pos.x,
                                 e.pos.y,
                                 e.pos.z,

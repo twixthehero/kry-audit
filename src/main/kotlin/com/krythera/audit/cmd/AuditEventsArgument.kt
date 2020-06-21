@@ -1,7 +1,7 @@
 package com.krythera.audit.cmd
 
 import com.google.gson.JsonObject
-import com.krythera.audit.events.AuditEvent
+import com.krythera.audit.db.AuditEvent
 import com.mojang.brigadier.StringReader
 import com.mojang.brigadier.arguments.ArgumentType
 import com.mojang.brigadier.context.CommandContext
@@ -47,8 +47,8 @@ class AuditEventsArgument : ArgumentType<Set<AuditEvent>> {
     }
 
     override fun getExamples(): MutableCollection<String> = mutableListOf(
-        AuditEvent.BLOCK_BREAK.toString(),
-        "'${AuditEvent.BLOCK_BREAK},${AuditEvent.BLOCK_PLACE}'"
+        AuditEvent.BREAK.toString(),
+        "'${AuditEvent.BREAK},${AuditEvent.PLACE}'"
     )
 
     companion object {

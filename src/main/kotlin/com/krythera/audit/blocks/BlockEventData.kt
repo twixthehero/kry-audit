@@ -1,6 +1,6 @@
 package com.krythera.audit.blocks
 
-import com.krythera.audit.events.AuditEvent
+import com.krythera.audit.db.AuditEvent
 import java.time.Instant
 
 data class BlockEventData(

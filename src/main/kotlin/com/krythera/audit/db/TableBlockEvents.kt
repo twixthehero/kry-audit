@@ -1,6 +1,5 @@
 package com.krythera.audit.db
 
-import com.krythera.audit.events.AuditEvent
 import org.jetbrains.exposed.dao.id.IntIdTable
 import org.jetbrains.exposed.sql.`java-time`.timestamp
 
@@ -12,7 +11,7 @@ object TableBlockEvents : IntIdTable() {
 
     val eventType = customEnumeration(
         "eventType",
-        "ENUM('${AuditEvent.AUDIT_EVENT_UNSPECIFIED}', '${AuditEvent.BLOCK_BREAK}', '${AuditEvent.BLOCK_PLACE}')",
+        "ENUM('${AuditEvent.AUDIT_EVENT_UNSPECIFIED}', '${AuditEvent.BREAK}', '${AuditEvent.PLACE}')",
         { AuditEvent.valueOf(it as String) },
         { it.name })
     val x = integer("x")

@@ -2,7 +2,10 @@ package com.krythera.audit
 
 import com.krythera.audit.config.ConfigHolder
 import com.krythera.audit.init.KryArgumentTypes
+import net.minecraftforge.api.distmarker.Dist
 import net.minecraftforge.eventbus.api.SubscribeEvent
+import net.minecraftforge.fml.DistExecutor
+import net.minecraftforge.fml.ExtensionPoint
 import net.minecraftforge.fml.ModLoadingContext
 import net.minecraftforge.fml.common.Mod
 import net.minecraftforge.fml.config.ModConfig
@@ -11,12 +14,27 @@ import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent
 import net.minecraftforge.fml.event.lifecycle.FMLDedicatedServerSetupEvent
 import net.minecraftforge.fml.event.lifecycle.InterModEnqueueEvent
 import net.minecraftforge.fml.event.lifecycle.InterModProcessEvent
+import net.minecraftforge.fml.network.FMLNetworkConstants
 import org.apache.logging.log4j.LogManager
+import java.util.function.BiPredicate
+import java.util.function.Supplier
 
 /** Mod file for kryaudit. */
 @Mod(KryAudit.MOD_ID)
 @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD, modid = KryAudit.MOD_ID)
 class KryAudit {
+    init {
+        // configure mod as server-only
+        ModLoadingContext.get().registerExtensionPoint(
+            ExtensionPoint.DISPLAYTEST
+        ) {
+            org.apache.commons.lang3.tuple.Pair.of(
+                Supplier { FMLNetworkConstants.IGNORESERVERONLY },
+                BiPredicate<String, Boolean> { _, _ -> true }
+            )
+        }
+    }
+
     companion object {
         const val MOD_ID = "kryaudit"
 
@@ -27,8 +45,12 @@ class KryAudit {
         @JvmStatic
         fun commonSetup(e: FMLCommonSetupEvent) {
             LOGGER.debug("common setup")
-            val ctx = ModLoadingContext.get()
-            ctx.registerConfig(ModConfig.Type.SERVER, ConfigHolder.SERVER_SPEC)
+            DistExecutor.safeRunWhenOn(Dist.DEDICATED_SERVER) {
+                DistExecutor.SafeRunnable {
+                    val ctx = ModLoadingContext.get()
+                    ctx.registerConfig(ModConfig.Type.SERVER, ConfigHolder.SERVER_SPEC)
+                }
+            }
 
             KryArgumentTypes.register()
         }

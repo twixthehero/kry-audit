@@ -24,7 +24,7 @@ import java.nio.file.Paths
 )
 class DatabaseConnectionManager {
     companion object {
-        private const val VERSION = 3
+        private const val VERSION = 4
         private const val DRIVER = "org.h2.Driver"
 
         private val LOGGER = LogManager.getLogger(DatabaseConnectionManager::class.java)
@@ -91,6 +91,7 @@ class DatabaseConnectionManager {
                 transaction(database) {
                     SchemaUtils.createMissingTablesAndColumns(TableDbVersion)
                     SchemaUtils.createMissingTablesAndColumns(TableBlockEvents)
+                    SchemaUtils.createMissingTablesAndColumns(TableItemEvents)
 
                     TableDbVersion.insert {
                         it[version] = VERSION

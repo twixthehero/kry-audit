@@ -70,7 +70,6 @@ class BoxCommand {
 
         private fun defaultEventTypes(): Set<AuditEvent> = setOf(AuditEvent.BREAK, AuditEvent.PLACE)
 
-
         @ExperimentalUnsignedTypes
         fun query(
             source: CommandSource,

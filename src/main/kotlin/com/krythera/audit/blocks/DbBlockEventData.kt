@@ -3,6 +3,7 @@ package com.krythera.audit.blocks
 import com.krythera.audit.db.AuditEvent
 import com.krythera.audit.db.TableBlockEvents
 import net.minecraft.util.math.BlockPos
+import org.apache.logging.log4j.LogManager
 import org.jetbrains.exposed.sql.Database
 import org.jetbrains.exposed.sql.batchInsert
 import org.jetbrains.exposed.sql.select
@@ -10,17 +11,21 @@ import org.jetbrains.exposed.sql.transactions.transaction
 
 class DbBlockEventData(private val database: Database) {
     fun addEvents(eventData: List<BlockEventData>) = transaction(database) {
-        TableBlockEvents.batchInsert(eventData) {
-            this[TableBlockEvents.blockEventId] = it.blockEventId
-            this[TableBlockEvents.timestamp] = it.timestamp
-            this[TableBlockEvents.eventType] = it.eventType
-            this[TableBlockEvents.x] = it.x
-            this[TableBlockEvents.y] = it.y
-            this[TableBlockEvents.z] = it.z
-            this[TableBlockEvents.metadata] = it.metadata
-        }
+        try {
+            TableBlockEvents.batchInsert(eventData) {
+                this[TableBlockEvents.blockEventId] = it.blockEventId
+                this[TableBlockEvents.timestamp] = it.timestamp
+                this[TableBlockEvents.eventType] = it.eventType
+                this[TableBlockEvents.x] = it.x
+                this[TableBlockEvents.y] = it.y
+                this[TableBlockEvents.z] = it.z
+                this[TableBlockEvents.metadata] = it.metadata
+            }
 
-        commit()
+            commit()
+        } catch (e: Exception) {
+            LOGGER.error(e)
+        }
     }
 
     fun query(position: BlockPos, eventTypes: Set<AuditEvent>): List<BlockEventData> {
@@ -83,5 +88,9 @@ class DbBlockEventData(private val database: Database) {
         }
 
         return results
+    }
+
+    private companion object {
+        private val LOGGER = LogManager.getLogger(DbBlockEventData::class.java)
     }
 }
